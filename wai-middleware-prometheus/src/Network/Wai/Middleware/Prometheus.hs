@@ -1,5 +1,6 @@
 -- | This module provides "Network.Wai" middlware for exporting "Prometheus"
 -- metrics and for instrumenting WAI applications.
+{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 
@@ -87,9 +88,10 @@ instrumentHandlerValueWithFilter resFilter f app req respond = do
       Nothing -> return ()
       Just res' -> do
         end <- getTime Monotonic
-        let method = Just $ decodeUtf8 (Wai.requestMethod req)
+        -- Note strict evaluation is important here to avoid memory leak
+        let !method = decodeUtf8 (Wai.requestMethod req)
         let status = Just $ T.pack (show (HTTP.statusCode (Wai.responseStatus res')))
-        observeSeconds (f req) method status start end
+        observeSeconds (f req) (Just method) status start end
     respond res
 
 -- | 'Wai.ResponseRaw' values have two parts: an action that can be executed to construct a
