@@ -75,8 +75,7 @@ spec = before_ (unregisterAll ns) $ after_ (unregisterAll ns) $
                 ,   "metric_count 3"
                 ])
       it "renders vectors" $ do
-            m <- register ns $ vector ("handler", "method")
-                          $ counter (Info "test_counter" "help string")
+            m <- register ns $ vector ("handler", "method") (counter (Info "test_counter" "help string")) Nothing
             withLabel m ("root", "GET") incCounter
             result <- exportMetricsAsText ns
             result `shouldBe` LT.encodeUtf8 (LT.pack $ unlines [
