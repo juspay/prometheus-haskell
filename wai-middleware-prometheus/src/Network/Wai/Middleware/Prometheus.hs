@@ -47,8 +47,7 @@ instance Default.Default PrometheusSettings where
 requestLatency :: Prom.Vector Prom.Label3 Prom.Histogram
 requestLatency =
   Prom.unsafeRegister "wai/requests"
-    $ Prom.vector ("handler", "method", "status_code")
-    $ Prom.histogram info Prom.defaultBuckets
+    $ Prom.vector ("handler", "method", "status_code") (Prom.histogram info Prom.defaultBuckets) Nothing
   where info = Prom.Info "http_request_duration_seconds"
                           "The HTTP request latencies in seconds."
 
