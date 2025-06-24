@@ -18,7 +18,7 @@ import qualified Prometheus.Metric.GHC as P
 
 {-# NOINLINE pageVisits #-}
 pageVisits :: P.Counter
-pageVisits = P.unsafeRegister
+pageVisits = P.unsafeRegister "page_visits"
            $ P.counter
            -- Each metric provided by the base library takes an Info value that
            -- gives the name of the metric and a help string that describes the
@@ -27,7 +27,7 @@ pageVisits = P.unsafeRegister
 
 {-# NOINLINE votes #-}
 votes :: P.Vector P.Label1 P.Counter
-votes = P.unsafeRegister
+votes = P.unsafeRegister "votes"
       -- Declare a vector of counters with a single dimension: "vote".
       $ P.vector "vote" (P.counter $ P.Info "votes" "The number of votes for each color.") Nothing
 
@@ -37,7 +37,7 @@ main = do
     putStrLn $ "Listening at http://localhost:" ++ show port ++ "/"
     -- Register the GHC runtime metrics. For these to work, the app must be run
     -- with the `+RTS -T` command line options.
-    _ <- P.register P.ghcMetrics
+    _ <- P.register "ghc_metrics" P.ghcMetrics
     -- Instrument the app with the prometheus middlware using the default
     -- `PrometheusSettings`. This will cause the app to dump the metrics when
     -- the /metrics endpoint is accessed.
