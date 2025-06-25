@@ -17,7 +17,7 @@ spec = describe "Prometheus.Metric.Vector" $ do
             value <- getVectorWith m getCounter
             value `shouldBe` []
       it "maintains state for a single label" $ do
-            m <- register $ vector ("a", "b") $ counter (Info "name" "help")
+            m <- register $ vector ("a", "b") (counter (Info "name" "help")) Nothing
             replicateM_ 47 $ withLabel m ("foo", "bar") incCounter
             value <- getVectorWith m getCounter
             value `shouldBe` [(("foo", "bar"), 47)]
