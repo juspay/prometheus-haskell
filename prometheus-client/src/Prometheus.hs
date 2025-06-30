@@ -128,7 +128,7 @@ module Prometheus (
 -- | A vector models a collection of metrics that share the same name but are
 -- partitioned across a set of dimensions.
 --
--- >>> myVector <- register $ vector ("method", "code") $ counter (Info "http_requests" "")
+-- >>> myVector <- register $ vector ("method", "code") (counter (Info "http_requests" "")) Nothing
 -- >>> withLabel myVector ("GET", "200") incCounter 
 -- >>> withLabel myVector ("GET", "200") incCounter 
 -- >>> withLabel myVector ("GET", "404") incCounter 
@@ -158,7 +158,7 @@ module Prometheus (
 --
 -- >>> :{
 -- >>> let myVector :: Metric (Vector Label3 Counter);
--- >>>     myVector = vector ("a", "b", "c") $ counter (Info "some_counter" "")
+-- >>>     myVector = vector ("a", "b", "c") (counter (Info "some_counter" "")) Nothing
 -- >>> :}
 
 ,   Label (..)

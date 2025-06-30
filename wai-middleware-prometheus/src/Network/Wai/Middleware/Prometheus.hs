@@ -67,15 +67,13 @@ instance Default.Default PrometheusSettings where
 
 {-# NOINLINE requestLatency #-}
 requestLatency :: Prom.Vector Prom.Label3 Prom.Histogram
-requestLatency = Prom.unsafeRegister $ Prom.vector ("handler", "method", "status_code")
-                                     $ Prom.histogram info Prom.defaultBuckets
+requestLatency = Prom.unsafeRegister $ Prom.vector ("handler", "method", "status_code") (Prom.histogram info Prom.defaultBuckets) Nothing
     where info = Prom.Info "http_request_duration_seconds"
                            "The HTTP request latencies in seconds."
 
 {-# NOINLINE requestLatencyWithVersionLabel #-}
 requestLatencyWithVersionLabel :: Prom.Vector Prom.Label4 Prom.Histogram
-requestLatencyWithVersionLabel = Prom.unsafeRegister $ Prom.vector ("handler", "method", "status_code", "version")
-                                                     $ Prom.histogram info Prom.defaultBuckets
+requestLatencyWithVersionLabel = Prom.unsafeRegister $ Prom.vector ("handler", "method", "status_code", "version") (Prom.histogram info Prom.defaultBuckets) Nothing
     where info = Prom.Info "http_request_duration_seconds"
                            "The HTTP request latencies in seconds."
 

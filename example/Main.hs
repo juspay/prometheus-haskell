@@ -29,9 +29,7 @@ pageVisits = P.unsafeRegister
 votes :: P.Vector P.Label1 P.Counter
 votes = P.unsafeRegister
       -- Declare a vector of counters with a single dimension: "vote".
-      $ P.vector "vote"
-      $ P.counter
-      $ P.Info "votes" "The number of votes for each color."
+      $ P.vector "vote" (P.counter $ P.Info "votes" "The number of votes for each color.") Nothing
 
 main :: IO ()
 main = do
