@@ -4,7 +4,13 @@
     haskell-flake.url = "github:srid/haskell-flake";
     nixpkgs.url = "github:nixos/nixpkgs/89c2b2330e733d6cdb5eae7b899326930c2c0648";
     systems.url = "github:nix-systems/default";
-    unix-memory.url = "path:/home/kiransai-abhishek/repos/hs-unix-memory";
+    unix-memory =
+      {
+        url = "https://github.com/infinitumkiran/hs-unix-memory.git";
+        rev= "bad0e19ea702d26489c6e76975e54601dd8ae991";
+        ref = "ghc984";
+        flake = false;
+      };
   };
   outputs = inputs @ {
     self,
@@ -16,29 +22,16 @@
       systems = import inputs.systems;
       imports = [inputs.haskell-flake.flakeModule];
 
-      perSystem = {
-        self',
-        pkgs,
-        lib,
-        config,
-        ...
-      }: {
+      perSystem = { self', pkgs, ... }: {
         haskellProjects.default = {
+          projectFlakeName = "classyplate";
           basePackages = pkgs.haskell.packages.ghc98;
           packages = {
-            record-dot-preprocessor.source="0.2.17";
-            servant.source="0.20.2";
             unix-memory.source=inputs.unix-memory;  
           };
           settings = {
           };
-          devShell = {
-            tools = hp: {
-              haskell-language-server = null;
-            };
-          };
-        };
-        packages.default =  self'.packages.ghc-hasfield-plugin;
+                  };
       };
     };
 }
