@@ -14,6 +14,7 @@
           projectFlakeName = "classyplate";
           basePackages = pkgs.haskell.packages.ghc98;
           packages = {
+            regex-tdfa.source="1.3.2.5";
           };
           settings = {
           };
