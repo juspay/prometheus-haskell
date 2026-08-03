@@ -1,3 +1,11 @@
+# 0.1.3.0 -- 2020-06-17
+
+* Support base-4.14 and GHC 8.10.
+
+# 0.1.2.0 -- 2019-09-18
+
+* Support base-4.13 and GHC 8.8.
+
 # 0.1.1.0 -- 2019-05-23
 
 * Change all use of `Int` to `Int64`. `Int` is only guaranteed to be able to
