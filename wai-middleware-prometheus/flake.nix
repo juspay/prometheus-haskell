@@ -4,8 +4,20 @@
     haskell-flake.url = "github:srid/haskell-flake";
     nixpkgs.url = "github:nixos/nixpkgs/89c2b2330e733d6cdb5eae7b899326930c2c0648";
     systems.url = "github:nix-systems/default";
-    unix-memory.url = "path:/home/kiransai-abhishek/repos/hs-unix-memory";
-    prometheus-client.url = "path:/home/kiransai-abhishek/repos/prometheus-haskell/prometheus-client";
+    unix-memory =
+      {
+        type = "git";
+        url = "https://github.com/juspay/hs-unix-memory.git";
+        # GHC 9.8 support lives in PR #1; juspay master does not have it yet.
+        # Switch to ref = "master" once that PR is merged.
+        ref = "refs/pull/1/head";
+        rev = "bad0e19ea702d26489c6e76975e54601dd8ae991";
+        flake = false;
+      };
+    prometheus-client = {
+      url = "path:../prometheus-client";
+      flake = false;
+    };
   };
   outputs = inputs @ {
     self,
@@ -13,7 +25,7 @@
     flake-parts,
     ...
   }:
-    flake-parts.lib.mkFlake { inputs = inputs // { inherit (inputs) nixpkgs nixpkgs-latest; }; } {
+    flake-parts.lib.mkFlake { inherit inputs; } {
       systems = import inputs.systems;
       imports = [inputs.haskell-flake.flakeModule];
 
@@ -27,10 +39,8 @@
         haskellProjects.default = {
           basePackages = pkgs.haskell.packages.ghc98;
           packages = {
-            record-dot-preprocessor.source="0.2.17";
-            servant.source="0.20.2";
-            unix-memory.source=inputs.unix-memory;  
-            prometheus-client.source=inputs.prometheus-client;  
+            unix-memory.source=inputs.unix-memory;
+            prometheus-client.source=inputs.prometheus-client;
           };
           settings = {
           };
@@ -40,7 +50,7 @@
             };
           };
         };
-        packages.default =  self'.packages.ghc-hasfield-plugin;
+        packages.default = self'.packages.wai-middleware-prometheus;
       };
     };
 }

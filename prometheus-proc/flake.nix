@@ -6,9 +6,12 @@
     systems.url = "github:nix-systems/default";
     unix-memory =
       {
-        url = "https://github.com/infinitumkiran/hs-unix-memory.git";
-        rev= "bad0e19ea702d26489c6e76975e54601dd8ae991";
-        ref = "ghc984";
+        type = "git";
+        url = "https://github.com/juspay/hs-unix-memory.git";
+        # GHC 9.8 support lives in PR #1; juspay master does not have it yet.
+        # Switch to ref = "master" once that PR is merged.
+        ref = "refs/pull/1/head";
+        rev = "bad0e19ea702d26489c6e76975e54601dd8ae991";
         flake = false;
       };
   };
@@ -18,20 +21,22 @@
     flake-parts,
     ...
   }:
-    flake-parts.lib.mkFlake { inputs = inputs // { inherit (inputs) nixpkgs nixpkgs-latest; }; } {
+    flake-parts.lib.mkFlake { inherit inputs; } {
       systems = import inputs.systems;
       imports = [inputs.haskell-flake.flakeModule];
 
       perSystem = { self', pkgs, ... }: {
         haskellProjects.default = {
-          projectFlakeName = "classyplate";
+          projectFlakeName = "prometheus-proc";
           basePackages = pkgs.haskell.packages.ghc98;
           packages = {
-            unix-memory.source=inputs.unix-memory;  
+            unix-memory.source=inputs.unix-memory;
           };
           settings = {
           };
-                  };
+        };
+
+        packages.default = self'.packages.prometheus-proc;
       };
     };
 }
